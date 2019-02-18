@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Messaging App Subscriber Export
+
+Globals:
+  Function:
+    Timeout: 300
+
+Resources:
+  sendreminder.SendRemindersLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: "sendreminder.SendRemindersLambda"
+      Handler: handler.SendReminders
+      Runtime: java8
+      MemorySize: 800
+      AutoPublishAlias: live
+      Timeout : 300
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/etai-full-access
+      CodeUri: ./target/task-reminder.jar
+      Environment:
+        Variables:
+          taskTable: !Ref TaskTable
+      Events:
+        OnceADay:
+          Type: Schedule
+          Properties:
+            Schedule: "cron(0 14 * * ? *)"
+
+  TaskTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "taskName"
+          AttributeType: "S"
+      KeySchema:
+      - AttributeName: "taskName"
+        KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: !Sub "${AWS::StackName}-task-table"
