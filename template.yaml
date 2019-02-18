@@ -7,7 +7,7 @@ Globals:
     Timeout: 300
 
 Resources:
-  sendreminder.SendRemindersLambda:
+  SendRemindersLambda:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: "sendreminder.SendRemindersLambda"

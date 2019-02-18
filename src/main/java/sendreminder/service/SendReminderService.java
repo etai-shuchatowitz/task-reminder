@@ -7,10 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sendreminder.dao.TaskDao;
 import sendreminder.model.Task;
 
 public class SendReminderService {
+
+  private static final Logger LOG = LogManager.getLogger(SendReminderService.class);
 
   private TaskDao taskDao;
   private Map<String, String> nameToPhoneNumber;
@@ -53,27 +58,31 @@ public class SendReminderService {
   }
 
   public void sendText(Task task) {
-    String phoneNumber = nameToPhoneNumber.get(task.getAssignee());
-    AddressConfiguration addressConfiguration = new AddressConfiguration();
-    addressConfiguration.setChannelType(ChannelType.SMS);
-    Map<String, AddressConfiguration> addresses = new HashMap<>();
-    addresses.put(phoneNumber, addressConfiguration);
+    try {
+      String phoneNumber = nameToPhoneNumber.get(task.getAssignee());
+      AddressConfiguration addressConfiguration = new AddressConfiguration();
+      addressConfiguration.setChannelType(ChannelType.SMS);
+      Map<String, AddressConfiguration> addresses = new HashMap<>();
+      addresses.put(phoneNumber, addressConfiguration);
 
-    SMSMessage smsMessage = new SMSMessage();
-    smsMessage.setBody(task.getTask());
-    smsMessage.setMessageType(MessageType.TRANSACTIONAL);
+      SMSMessage smsMessage = new SMSMessage();
+      smsMessage.setBody(task.getTask());
+      smsMessage.setMessageType(MessageType.TRANSACTIONAL);
 
-    DirectMessageConfiguration directMessageConfiguration = new DirectMessageConfiguration();
-    directMessageConfiguration.setSMSMessage(smsMessage);
-    MessageRequest messageRequest = new MessageRequest();
-    messageRequest.setAddresses(addresses);
-    messageRequest.setMessageConfiguration(directMessageConfiguration);
+      DirectMessageConfiguration directMessageConfiguration = new DirectMessageConfiguration();
+      directMessageConfiguration.setSMSMessage(smsMessage);
+      MessageRequest messageRequest = new MessageRequest();
+      messageRequest.setAddresses(addresses);
+      messageRequest.setMessageConfiguration(directMessageConfiguration);
 
-    SendMessagesRequest sendMessageRequest =
-        new SendMessagesRequest()
-            .withApplicationId("6987786d73a44f83ad5d320bb456e9ce")
-            .withMessageRequest(messageRequest);
+      SendMessagesRequest sendMessageRequest =
+              new SendMessagesRequest()
+                      .withApplicationId("6987786d73a44f83ad5d320bb456e9ce")
+                      .withMessageRequest(messageRequest);
 
-    amazonPinpoint.sendMessages(sendMessageRequest);
+      amazonPinpoint.sendMessages(sendMessageRequest);
+    } catch (AmazonPinpointException e) {
+      LOG.error("Error sending text for task: " + task + " with message " + e.getMessage(), e);
+    }
   }
 }

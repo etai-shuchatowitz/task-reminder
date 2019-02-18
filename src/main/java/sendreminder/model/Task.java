@@ -45,4 +45,14 @@ public class Task {
   public void setAssignee(String assignee) {
     this.assignee = assignee;
   }
+
+  @Override
+  public String toString() {
+    return "Task{" +
+            "task='" + task + '\'' +
+            ", assignee='" + assignee + '\'' +
+            ", done=" + done +
+            ", index=" + index +
+            '}';
+  }
 }
