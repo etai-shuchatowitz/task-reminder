@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sendreminder.dao.TaskDao;
@@ -76,9 +75,9 @@ public class SendReminderService {
       messageRequest.setMessageConfiguration(directMessageConfiguration);
 
       SendMessagesRequest sendMessageRequest =
-              new SendMessagesRequest()
-                      .withApplicationId("6987786d73a44f83ad5d320bb456e9ce")
-                      .withMessageRequest(messageRequest);
+          new SendMessagesRequest()
+              .withApplicationId("6987786d73a44f83ad5d320bb456e9ce")
+              .withMessageRequest(messageRequest);
 
       amazonPinpoint.sendMessages(sendMessageRequest);
     } catch (AmazonPinpointException e) {

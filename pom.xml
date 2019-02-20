@@ -19,7 +19,7 @@
     </properties>
 
     <build>
-        <finalName>sublime-consumer</finalName>
+        <finalName>task-reminder</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

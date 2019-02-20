@@ -4,12 +4,9 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.ItemCollection;
 import com.amazonaws.services.dynamodbv2.document.ScanOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
-import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sendreminder.model.Task;
@@ -29,11 +26,11 @@ public class TaskDao {
     List<Task> tasks = new ArrayList<>();
     try {
       ItemCollection<ScanOutcome> items =
-              table.scan(
-                      null, // FilterExpression
-                      "index, task, assignee, done", // ProjectionExpression
-                      null, // ExpressionAttributeName)s - not used in this example
-                      null);
+          table.scan(
+              null, // FilterExpression
+              "index, task, assignee, done", // ProjectionExpression
+              null, // ExpressionAttributeName)s - not used in this example
+              null);
 
       for (Item item : items) {
         String assignee = item.getString("assignee");
@@ -51,7 +48,8 @@ public class TaskDao {
 
   public void putInTable(Task task) {
     try {
-      Item item = new Item()
+      Item item =
+          new Item()
               .withPrimaryKey("taskName", task.getTask())
               .withString("assignee", task.getAssignee())
               .withInt("index", task.getIndex())

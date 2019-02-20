@@ -10,17 +10,17 @@ Resources:
   SendRemindersLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: "sendreminder.SendRemindersLambda"
-      Handler: handler.SendReminders
+      FunctionName: "SendRemindersLambda"
+      Handler: sendreminder.SendRemindersLambda
       Runtime: java8
       MemorySize: 800
       AutoPublishAlias: live
       Timeout : 300
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/etai-full-access
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/etai-lambda
       CodeUri: ./target/task-reminder.jar
       Environment:
         Variables:
-          taskTable: !Ref TaskTable
+          tableName: !Ref TaskTable
       Events:
         OnceADay:
           Type: Schedule
