@@ -22,10 +22,10 @@ Resources:
         Variables:
           tableName: !Ref TaskTable
       Events:
-        OnceADay:
+        EveryThursday:
           Type: Schedule
           Properties:
-            Schedule: "cron(0 14 * * ? *)"
+            Schedule: "cron(0 18 ? * THU *)"
 
   TaskTable:
     Type: AWS::DynamoDB::Table

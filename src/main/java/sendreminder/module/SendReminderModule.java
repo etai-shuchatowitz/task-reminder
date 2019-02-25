@@ -42,6 +42,8 @@ public class SendReminderModule {
     Map<String, String> nameToPhoneNumber = new HashMap<>();
     nameToPhoneNumber.put("Etai Shuchatowitz", "+17813431806");
     nameToPhoneNumber.put("Avi Amon", "+12063561863");
+    nameToPhoneNumber.put("Laivi Salvaggio", "+17814056412");
+    nameToPhoneNumber.put("Yoseph Ehrenkranz", "+13393649910");
     return nameToPhoneNumber;
   }
 }

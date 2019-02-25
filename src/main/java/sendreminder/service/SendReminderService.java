@@ -70,8 +70,11 @@ public class SendReminderService {
       Map<String, AddressConfiguration> addresses = new HashMap<>();
       addresses.put(phoneNumber, addressConfiguration);
 
+      String textBody =
+          "Hi " + task.getAssignee() + ", \n Your task this week is " + task.getTaskName();
+
       SMSMessage smsMessage = new SMSMessage();
-      smsMessage.setBody(task.getTaskName());
+      smsMessage.setBody(textBody);
       smsMessage.setMessageType(MessageType.TRANSACTIONAL);
 
       DirectMessageConfiguration directMessageConfiguration = new DirectMessageConfiguration();
