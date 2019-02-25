@@ -38,13 +38,25 @@ public class SendReminderService {
     }
   }
 
-  List<Task> scrambleTasks(List<Task> tasks) {
+  public List<Task> scrambleTasks(List<Task> tasks) {
+    Map<String, Integer> nameToTaskNumber = new HashMap<>();
+    Map<Integer, String> taskNumberToTaskName = new HashMap<>();
 
     List<Task> updatedTasks = new ArrayList<>();
 
     for (Task task : tasks) {
-      int updatedTaskNumber = (task.getTaskNumber() + 1) % tasks.size();
-      updatedTasks.add(new Task(task.getTaskName(), task.getAssignee(), updatedTaskNumber, false));
+      taskNumberToTaskName.put(task.getTaskNumber(), task.getTaskName());
+      nameToTaskNumber.put(task.getAssignee(), task.getTaskNumber());
+    }
+
+    for (Map.Entry<Integer, String> entry : taskNumberToTaskName.entrySet()) {
+      System.out.println(entry);
+    }
+
+    for (Map.Entry<String, Integer> entry : nameToTaskNumber.entrySet()) {
+      int updatedTaskNumber = (entry.getValue() + 1) % nameToTaskNumber.size();
+      String taskName = taskNumberToTaskName.get(updatedTaskNumber);
+      updatedTasks.add(new Task(taskName, entry.getKey(), updatedTaskNumber, false));
     }
 
     return updatedTasks;
