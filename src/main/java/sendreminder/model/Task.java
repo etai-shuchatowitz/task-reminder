@@ -2,24 +2,24 @@ package sendreminder.model;
 
 public class Task {
 
-  private String task;
+  private String taskName;
   private String assignee;
   private boolean done;
-  private int index;
+  private int taskNumber;
 
-  public Task(String task, String assignee, int index, boolean done) {
-    this.task = task;
+  public Task(String taskName, String assignee, int taskNumber, boolean done) {
+    this.taskName = taskName;
     this.assignee = assignee;
-    this.index = index;
+    this.taskNumber = taskNumber;
     this.done = done;
   }
 
-  public int getIndex() {
-    return index;
+  public int getTaskNumber() {
+    return taskNumber;
   }
 
-  public void setIndex(int index) {
-    this.index = index;
+  public void setTaskNumber(int taskNumber) {
+    this.taskNumber = taskNumber;
   }
 
   public boolean isDone() {
@@ -30,12 +30,12 @@ public class Task {
     this.done = done;
   }
 
-  public String getTask() {
-    return task;
+  public String getTaskName() {
+    return taskName;
   }
 
-  public void setTask(String task) {
-    this.task = task;
+  public void setTaskName(String taskName) {
+    this.taskName = taskName;
   }
 
   public String getAssignee() {
@@ -49,16 +49,16 @@ public class Task {
   @Override
   public String toString() {
     return "Task{"
-        + "task='"
-        + task
+        + "taskName='"
+        + taskName
         + '\''
         + ", assignee='"
         + assignee
         + '\''
         + ", done="
         + done
-        + ", index="
-        + index
+        + ", taskNumber="
+        + taskNumber
         + '}';
   }
 }

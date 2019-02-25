@@ -33,24 +33,18 @@ public class SendReminderService {
     List<Task> updatedTasks = scrambleTasks(taskList);
     for (Task task : updatedTasks) {
       sendText(task);
+      taskDao.putInTable(task);
+      // TODO: reupload to table
     }
   }
 
-  public List<Task> scrambleTasks(List<Task> tasks) {
-    Map<String, Integer> nameToIndex = new HashMap<>();
-    Map<Integer, String> indexToTaskName = new HashMap<>();
+  List<Task> scrambleTasks(List<Task> tasks) {
 
     List<Task> updatedTasks = new ArrayList<>();
 
     for (Task task : tasks) {
-      indexToTaskName.put(task.getIndex(), task.getTask());
-      nameToIndex.put(task.getAssignee(), task.getIndex());
-    }
-
-    for (Map.Entry<String, Integer> entry : nameToIndex.entrySet()) {
-      int updatedIndex = (entry.getValue() + 1) % 4;
-      String taskName = indexToTaskName.get(updatedIndex);
-      updatedTasks.add(new Task(taskName, entry.getKey(), updatedIndex, false));
+      int updatedTaskNumber = (task.getTaskNumber() + 1) % tasks.size();
+      updatedTasks.add(new Task(task.getTaskName(), task.getAssignee(), updatedTaskNumber, false));
     }
 
     return updatedTasks;
@@ -65,7 +59,7 @@ public class SendReminderService {
       addresses.put(phoneNumber, addressConfiguration);
 
       SMSMessage smsMessage = new SMSMessage();
-      smsMessage.setBody(task.getTask());
+      smsMessage.setBody(task.getTaskName());
       smsMessage.setMessageType(MessageType.TRANSACTIONAL);
 
       DirectMessageConfiguration directMessageConfiguration = new DirectMessageConfiguration();
@@ -79,7 +73,13 @@ public class SendReminderService {
               .withApplicationId("6987786d73a44f83ad5d320bb456e9ce")
               .withMessageRequest(messageRequest);
 
-      amazonPinpoint.sendMessages(sendMessageRequest);
+      SendMessagesResult result = amazonPinpoint.sendMessages(sendMessageRequest);
+      LOG.info(
+          "Successfully sent message for task "
+              + task
+              + " with message "
+              + result.getMessageResponse().toString());
+
     } catch (AmazonPinpointException e) {
       LOG.error("Error sending text for task: " + task + " with message " + e.getMessage(), e);
     }

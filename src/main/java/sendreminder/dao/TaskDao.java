@@ -13,7 +13,6 @@ import sendreminder.model.Task;
 
 public class TaskDao {
 
-  //    private static final Gson gson = new Gson();
   private static final Logger LOG = LogManager.getLogger(TaskDao.class);
 
   private Table table;
@@ -28,17 +27,18 @@ public class TaskDao {
       ItemCollection<ScanOutcome> items =
           table.scan(
               null, // FilterExpression
-              "index, task, assignee, done", // ProjectionExpression
+              "taskNumber, taskName, assignee, done", // ProjectionExpression
               null, // ExpressionAttributeName)s - not used in this example
               null);
 
       for (Item item : items) {
         String assignee = item.getString("assignee");
         boolean done = item.getBOOL("done");
-        int index = item.getInt("index");
-        String taskName = item.getString("task");
-        Task task = new Task(taskName, assignee, index, done);
+        int taskNumber = item.getInt("taskNumber");
+        String taskName = item.getString("taskName");
+        Task task = new Task(taskName, assignee, taskNumber, done);
         tasks.add(task);
+        LOG.info("Retrieved " + task);
       }
     } catch (AmazonDynamoDBException e) {
       LOG.error("Error scanning for tasks with message: " + e.getMessage(), e);
@@ -50,11 +50,12 @@ public class TaskDao {
     try {
       Item item =
           new Item()
-              .withPrimaryKey("taskName", task.getTask())
+              .withPrimaryKey("taskName", task.getTaskName())
               .withString("assignee", task.getAssignee())
-              .withInt("index", task.getIndex())
+              .withInt("taskNumber", task.getTaskNumber())
               .withBoolean("done", task.isDone());
       table.putItem(item);
+      LOG.info("succesfully reuploaded item " + task);
     } catch (AmazonDynamoDBException e) {
       LOG.error("Error saving task " + task + " to dynamo with error " + e.getMessage(), e);
     }

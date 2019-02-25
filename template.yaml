@@ -17,7 +17,7 @@ Resources:
       AutoPublishAlias: live
       Timeout : 300
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/etai-lambda
-      CodeUri: ./target/task-reminder.jar
+      CodeUri: ./target/taskName-reminder.jar
       Environment:
         Variables:
           tableName: !Ref TaskTable
@@ -39,4 +39,4 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
-      TableName: !Sub "${AWS::StackName}-task-table"
+      TableName: !Sub "${AWS::StackName}-taskName-table"
